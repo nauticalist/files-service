@@ -1,0 +1,49 @@
+server:
+  port: 8088
+
+logging:
+  pattern:
+    console: "[FILES-SERVICE] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  level:
+    root: INFO
+    io.seanapse.clients: DEBUG
+    com.amazonaws: DEBUG
+    org.springframework.security: DEBUG
+
+# Actuator
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:rootpassword@localhost:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
+      database: files
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+#file:
+#  upload-location: /fileStorage
+
+spring.security.oauth2:
+  resourceserver:
+    jwt:
+      issuer-uri: http://localhost:8081/auth/realms/jms
+      jwk-set-uri: http://localhost:8081/auth/realms/jms/protocol/openid-connect/certs
+
+aws:
+  s3:
+    accessKey: SSSSSIAVUCPXXXXXXXXXXXX
+    secretKey: SSSSSD+8ZlkMkIAqnrq+WWWPrXXXXXXXXXxxxxxxx
+    endpoint: https://test.s3.eu-central-1.amazonaws.com/
+    bucketName: testrepository
+    region: eu-central-1

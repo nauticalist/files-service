@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+logging:
+  pattern:
+    console: "[FILES-SERVICE] %clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(---){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      group:
+        readiness:
+          include: readinessState,db
+        liveness:
+          include: livenessState,ping,diskSpace
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${FILES-MONGO_USER}:${FILES-MONGO_PASSWORD}@${FILES-MONGO_HOST}:${FILES-MONGO_PORT}/?authSource=admin&authMechanism=SCRAM-SHA-1
+      database: ${FILES-MONGO_DATABASE}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+#file:
+#  upload-location: /fileStorage
+
+spring.security.oauth2:
+  resourceserver:
+    jwt:
+      issuer-uri: ${AUTH_SERVER-ISSUER_URI}
+      jwk-set-uri: ${AUTH_SERVER-JWK_SET_URI}
+
+aws:
+  s3:
+    accessKey: ${AWS-ACCESS_KEY_ID}
+    secretKey: ${AWS-SECRET_KEY}
+    endpoint: ${AWS-S3_ENDPOINT}
+    bucketName: ${AWS-S3_BUCKET}
+    region: ${AWS-S3_REGION}
